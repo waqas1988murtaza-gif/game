@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎮 EduPlay Sindh - Fun Learning Game</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Comic Sans MS', 'Trebuchet MS', sans-serif; }
+  body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fbc2eb 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .container {
+    background: white;
+    border-radius: 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    padding: 30px;
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    position: relative;
+  }
+  h1 { color: #ff4081; font-size: 2.2em; margin-bottom: 5px; }
+  .subtitle { color: #666; margin-bottom: 20px; font-size: 1em; }
+  .screen { display: none; animation: fadeIn 0.5s; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+  
+  .btn {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 50px;
+    font-size: 1.1em;
+    cursor: pointer;
+    margin: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+  }
+  .btn:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(102,126,234,0.6); }
+  .btn-class { background: linear-gradient(135deg, #f093fb, #f5576c); width: 140px; }
+  .btn-subject { background: linear-gradient(135deg, #4facfe, #00f2fe); width: 160px; }
+  .btn-option { background: white; color: #333; border: 3px solid #667eea; width: 100%; max-width: 400px; display: block; margin: 10px auto; text-align: left; padding-left: 25px; }
+  
+  .correct { background: #4caf50 !important; color: white !important; border-color: #4caf50 !important; animation: pulse 0.3s; }
+  .wrong { background: #f44336 !important; color: white !important; border-color: #f44336 !important; }
+  
+  @keyframes pulse { 0% {transform: scale(1);} 50% {transform: scale(1.05);} 100% {transform: scale(1);} }
+
+  .audio-controls { position: absolute; top: 15px; right: 20px; cursor: pointer; font-size: 1.5em; }
+  .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin: 20px 0; }
+  .question-box { background: #fff3e0; border: 4px dashed #ff9800; border-radius: 20px; padding: 25px; margin: 20px 0; font-size: 1.4em; color: #333; }
+  .stats { display: flex; justify-content: space-around; background: #f5f5f5; border-radius: 15px; padding: 15px; margin-bottom: 20px; }
+  .stat-value { font-size: 1.5em; font-weight: bold; color: #ff4081; }
+  .progress-bar { background: #e0e0e0; border-radius: 10px; height: 15px; overflow: hidden; margin: 10px 0; }
+  .progress-fill { background: linear-gradient(90deg, #4caf50, #8bc34a); height: 100%; transition: width 0.5s; }
+  .badge { display: inline-block; background: gold; color: #333; padding: 5px 15px; border-radius: 20px; font-weight: bold; margin: 5px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="audio-controls" onclick="toggleMusic()" id="musicToggle">🔊</div>
+
+    <!-- HOME SCREEN -->
+    <div id="home" class="screen active">
+        <div class="mascot">👦📚👧</div>
+        <h1>🎮 EduPlay Sindh</h1>
+        <p class="subtitle">Sindh Textbook Board Edition</p>
+        <div class="stats">
+            <div class="stat"><div class="stat-value" id="totalStars">0</div><div>⭐ Stars</div></div>
+            <div class="stat"><div class="stat-value" id="totalBadges">0</div><div>🏅 Badges</div></div>
+        </div>
+        <button class="btn" onclick="show('classSelect')">🚀 Start Playing</button>
+    </div>
+
+    <!-- CLASS SELECT -->
+    <div id="classSelect" class="screen">
+        <h2>📚 Select Class</h2>
+        <div class="grid" id="classGrid"></div>
+        <button class="btn" onclick="show('home')" style="background:#999;">⬅ Back</button>
+    </div>
+
+    <!-- SUBJECT SELECT -->
+    <div id="subjectSelect" class="screen">
+        <h2 id="subjectTitle">📖 Choose Subject</h2>
+        <div class="grid" id="subjectGrid"></div>
+        <button class="btn" onclick="show('classSelect')" style="background:#999;">⬅ Back</button>
+    </div>
+
+    <!-- QUIZ SCREEN -->
+    <div id="quiz" class="screen">
+        <div class="stats">
+            <div id="qNum" class="stat-value">1/5</div>
+            <div id="qScore" class="stat-value" style="color:#4caf50">0</div>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="question-box" id="questionText">...</div>
+        <div id="optionsBox"></div>
+        <p id="feedback" style="font-size:1.2em; font-weight:bold; margin-top:10px;"></p>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div id="result" class="screen">
+        <div class="mascot" id="resultMascot">🎉</div>
+        <h1 id="resultTitle">Well Done!</h1>
+        <div id="resultStars" style="font-size: 3em; margin:10px;">⭐⭐⭐</div>
+        <h2 id="resultScore">5/5</h2>
+        <button class="btn" onclick="show('classSelect')">📚 Next Lesson</button>
+        <button class="btn" onclick="show('home')" style="background:#999;">🏠 Home</button>
+    </div>
+</div>
+
+<!-- Audio Elements (Free Sound Assets) -->
+<audio id="bgMusic" loop src="https://actions.google.com/config/music/childrens_adventure.mp3"></audio>
+<audio id="correctSound" src="https://actions.google.com/config/music/success_bell.mp3"></audio>
+<audio id="wrongSound" src="https://actions.google.com/config/music/fail_buzzer.mp3"></audio>
+
+<script>
+const QUESTIONS = {
+    "Class 1": {
+        "Math": [
+            {q:"How many corners does a square have?", o:["3","4","5","0"], a:"4"},
+            {q:"What is 10 + 5?", o:["12","15","20","10"], a:"15"},
+            {q:"Which number is smaller? 12 or 8?", o:["12","8","Same","None"], a:"8"},
+            {q:"Count the stars: ⭐⭐⭐⭐⭐⭐", o:["4","5","6","7"], a:"6"},
+            {q:"What comes after 19?", o:["18","20","21","22"], a:"20"}
+        ],
+        "Science": [
+            {q:"Which part of the plant is under the ground?", o:["Leaf","Flower","Root","Stem"], a:"Root"},
+            {q:"We use our ___ to see colors.", o:["Ears","Eyes","Nose","Hands"], a:"Eyes"},
+            {q:"Is a stone a living thing?", o:["Yes","No","Maybe","Only in water"], a:"No"},
+            {q:"Which animal gives us milk?", o:["Lion","Cow","Tiger","Eagle"], a:"Cow"},
+            {q:"Fish live in ___?", o:["Trees","Water","Desert","House"], a:"Water"}
+        ],
+        "Sindhi": [
+            {q:"Sindh jo Darul Hukumat (Capital) kero aahe?", o:["Karachi","Hyderabad","Sukkur","Larkana"], a:"Karachi"},
+            {q:"'Saj' (سج) mane cha aahe?", o:["Moon","Sun","Star","Cloud"], a:"Sun"},
+            {q:"'Mani' (ماني) mane cha aahe?", o:["Water","Food/Bread","Milk","Fruit"], a:"Food/Bread"}
+        ]
+    },
+    "Class 3": {
+        "General Knowledge": [
+            {q:"Who is the founder of Pakistan?", o:["Allama Iqbal","Quaid-e-Azam","Liaquat Ali Khan","Bhutto"], a:"Quaid-e-Azam"},
+            {q:"National Flower of Pakistan?", o:["Rose","Jasmine","Tulip","Lotus"], a:"Jasmine"},
+            {q:"Largest Province of Pakistan by Area?", o:["Sindh","Punjab","Balochistan","KPK"], a:"Balochistan"},
+            {q:"How many months in a year?", o:["10","11","12","13"], a:"12"},
+            {q:"Which city is called the City of Lights?", o:["Lahore","Islamabad","Karachi","Peshawar"], a:"Karachi"}
+        ]
+    }
+    // Mazeed classes upar wale pattern pe add kar sakte hain
+};
+
+let state = JSON.parse(localStorage.getItem('eduplay_v2')) || { stars: 0, badges: 0 };
+let current = { idx:0, score:0, questions:[] };
+let isMusicPlaying = false;
+
+function toggleMusic() {
+    const bg = document.getElementById('bgMusic');
+    const icon = document.getElementById('musicToggle');
+    if (isMusicPlaying) {
+        bg.pause();
+        icon.textContent = "🔇";
+    } else {
+        bg.play().catch(e => console.log("Audio needs user click"));
+        icon.textContent = "🔊";
+    }
+    isMusicPlaying = !isMusicPlaying;
+}
+
+function show(id) {
+    document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(id==='classSelect') buildClasses();
+    if(id==='home') updateHome();
+}
+
+function buildClasses() {
+    const grid = document.getElementById('classGrid');
+    grid.innerHTML = '';
+    Object.keys(QUESTIONS).forEach(c => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-class';
+        btn.textContent = c;
+        btn.onclick = () => { current.class = c; buildSubjects(); show('subjectSelect'); };
+        grid.appendChild(btn);
+    });
+}
+
+function buildSubjects() {
+    const grid = document.getElementById('subjectGrid');
+    grid.innerHTML = '';
+    Object.keys(QUESTIONS[current.class]).forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-subject';
+        btn.textContent = s;
+        btn.onclick = () => startQuiz(s);
+        grid.appendChild(btn);
+    });
+}
+
+function startQuiz(sub) {
+    current.questions = [...QUESTIONS[current.class][sub]].sort(()=>Math.random()-0.5);
+    current.idx = 0; current.score = 0;
+    show('quiz'); loadQuestion();
+}
+
+function loadQuestion() {
+    const q = current.questions[current.idx];
+    document.getElementById('qNum').textContent = `${current.idx+1}/${current.questions.length}`;
+    document.getElementById('qScore').textContent = `⭐ ${current.score}`;
+    document.getElementById('progressFill').style.width = `${(current.idx/current.questions.length)*100}%`;
+    document.getElementById('questionText').textContent = q.q;
+    document.getElementById('feedback').textContent = '';
+    
+    const box = document.getElementById('optionsBox');
+    box.innerHTML = '';
+    q.o.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-option';
+        btn.textContent = opt;
+        btn.onclick = () => checkAnswer(btn, opt, q.a);
+        box.appendChild(btn);
+    });
+}
+
+function checkAnswer(btn, chosen, correct) {
+    const btns = document.querySelectorAll('.btn-option');
+    btns.forEach(b => b.disabled = true);
+
+    if(chosen === correct) {
+        btn.classList.add('correct');
+        document.getElementById('correctSound').play();
+        current.score++;
+        document.getElementById('feedback').textContent = "Sahi Jawab! 🌟";
+    } else {
+        btn.classList.add('wrong');
+        document.getElementById('wrongSound').play();
+        document.getElementById('feedback').textContent = "Oho! Sahi tha: " + correct;
+    }
+
+    setTimeout(() => {
+        current.idx++;
+        if(current.idx < current.questions.length) loadQuestion();
+        else finish();
+    }, 1500);
+}
+
+function finish() {
+    const total = current.questions.length;
+    let stars = current.score === total ? 3 : current.score >= total/2 ? 2 : 1;
+    state.stars += stars;
+    localStorage.setItem('eduplay_v2', JSON.stringify(state));
+    
+    document.getElementById('resultStars').textContent = "⭐".repeat(stars);
+    document.getElementById('resultScore').textContent = `Score: ${current.score}/${total}`;
+    show('result');
+}
+
+function updateHome() {
+    document.getElementById('totalStars').textContent = state.stars;
+    document.getElementById('totalBadges').textContent = state.badges;
+}
+
+updateHome();
+</script>
+</body>
+</html>
