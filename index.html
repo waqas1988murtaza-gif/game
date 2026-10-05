@@ -3,9 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎮 EduPlay Sindh - Upgraded</title>
+<meta name="description" content="EduPlay Sindh — Pre-Nursery se Class 5 tak bachon ke liye muft Urdu/English quiz game. Zara mascot ke saath seekho aur khelo!">
+<meta name="theme-color" content="#7c3aed">
+<meta property="og:title" content="🎮 EduPlay Sindh — Bachon Ka Quiz Game">
+<meta property="og:description" content="Pre-Nursery se Class 5 tak — 180+ sawalat, Urdu awaz wali Zara mascot ke saath. Muft seekho, khelo aur jeeto!">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%237c3aed'/%3E%3Ctext x='50' y='72' font-size='58' text-anchor='middle'%3E%E2%AD%90%3C/text%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>🎮 EduPlay Sindh — Bachon Ka Quiz Game</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap');
+  /* Self-hosted fonts (offline-safe) — Fredoka One + Nunito variable */
+  @font-face {
+    font-family: 'Fredoka One';
+    src: url('fonts/fredoka-one.woff2') format('woff2');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'Nunito';
+    src: url('fonts/nunito.woff2') format('woff2');
+    font-weight: 400 800; font-style: normal; font-display: swap;
+  }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -27,7 +45,7 @@
     align-items: center;
     justify-content: center;
     padding: 15px;
-    font-family: 'Nunito', 'Comic Sans MS', sans-serif;
+    font-family: 'Nunito', 'Segoe UI', system-ui, 'Comic Sans MS', sans-serif;
     overflow-x: hidden;
   }
 
@@ -71,7 +89,7 @@
     position: relative;
   }
   .game-header h1 {
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Fredoka One', 'Trebuchet MS', 'Comic Sans MS', cursive;
     font-size: 2.3em;
     letter-spacing: 1px;
     text-shadow: 2px 3px 0 rgba(0,0,0,0.2);
@@ -144,7 +162,7 @@
     border: 2px solid #e9d5ff;
   }
   .stat-box { text-align: center; }
-  .stat-val { font-family: 'Fredoka One', cursive; font-size: 1.8em; color: var(--purple); }
+  .stat-val { font-family: 'Fredoka One', 'Trebuchet MS', 'Comic Sans MS', cursive; font-size: 1.8em; color: var(--purple); }
   .stat-lbl { font-size: 0.75em; color: #888; font-weight: 600; }
 
   /* BUTTONS */
@@ -241,8 +259,8 @@
     margin-bottom: 5px;
     border: 2px solid #e9d5ff;
   }
-  .quiz-qnum { font-family: 'Fredoka One', cursive; color: var(--purple); font-size: 1.1em; }
-  .quiz-score { font-family: 'Fredoka One', cursive; color: var(--green); font-size: 1.1em; }
+  .quiz-qnum { font-family: 'Fredoka One', 'Trebuchet MS', 'Comic Sans MS', cursive; color: var(--purple); font-size: 1.1em; }
+  .quiz-score { font-family: 'Fredoka One', 'Trebuchet MS', 'Comic Sans MS', cursive; color: var(--green); font-size: 1.1em; }
 
   /* FEEDBACK */
   #feedback {
@@ -263,7 +281,7 @@
   }
   .result-stars { font-size: 3.5em; margin: 10px 0; }
   #resultTitle {
-    font-family: 'Fredoka One', cursive;
+    font-family: 'Fredoka One', 'Trebuchet MS', 'Comic Sans MS', cursive;
     font-size: 2em;
     color: var(--purple);
   }
@@ -327,9 +345,26 @@
     100% { transform: scale(1); }
   }
 
-  h2 { font-family: 'Fredoka One', cursive; color: var(--purple); font-size: 1.5em; margin-bottom: 5px; }
+  h2 { font-family: 'Fredoka One', 'Trebuchet MS', 'Comic Sans MS', cursive; color: var(--purple); font-size: 1.5em; margin-bottom: 5px; }
 
   .divider { height: 2px; background: linear-gradient(90deg, transparent, #e9d5ff, transparent); margin: 15px 0; }
+
+  /* MOBILE (small phones) */
+  @media (max-width: 480px) {
+    body { padding: 8px; }
+    .container { padding: 20px 14px; border-radius: 22px; }
+    .game-header { margin: -20px -14px 16px -14px; padding: 18px 12px 14px; }
+    #home .game-header { padding-top: 58px; } /* music/speech buttons ke neeche title */
+    .game-header h1 { font-size: 1.6em; }
+    .question-box { font-size: 1.1em; padding: 16px; }
+    .btn-option { font-size: 0.95em; padding: 12px 14px; }
+    .btn-class { width: 44%; font-size: 0.85em; }
+    .btn-subject { width: 44%; font-size: 0.85em; }
+    .stats-bar { gap: 12px; padding: 10px; }
+    .stat-val { font-size: 1.4em; }
+    .speech-bubble { font-size: 0.95em; }
+    #resultTitle { font-size: 1.5em; }
+  }
 </style>
 </head>
 <body>
@@ -862,7 +897,9 @@ const QUESTIONS = {
       {q:"Kaunsa planet Suraj ke sabse qareeb hai?", o:["Earth","Mars","Mercury","Venus"], a:"Mercury"},
       {q:"Baraf pani ka kaunsa roop hai?", o:["Gas","Liquid","Solid","Plasma"], a:"Solid"},
       {q:"Insaan ke kitne daant hote hain adult mein?", o:["28","30","32","36"], a:"32"},
-      {q:"Photosynthesis mein kya banta hai?", o:["Oxygen","CO2","Water","Nitrogen"], a:"Oxygen"}
+      {q:"Photosynthesis mein kya banta hai?", o:["Oxygen","CO2","Water","Nitrogen"], a:"Oxygen"},
+      {q:"Suraj kya hai?", o:["Planet","Star (Sitara)","Moon","Comet"], a:"Star (Sitara)"},
+      {q:"Chand par pehla qadam kisne rakha?", o:["Yuri Gagarin","Neil Armstrong","Buzz Aldrin","Kalpana Chawla"], a:"Neil Armstrong"}
     ]
   },
 
@@ -933,7 +970,10 @@ const QUESTIONS = {
     "General Knowledge": [
       {q:"Dunya ka sabse bada darya kaun sa hai?", o:["Amazon","Nile","Yangtze","Mississippi"], a:"Nile"},
       {q:"Quaid-e-Azam ka poora naam?", o:["Muhammad Iqbal","Muhammad Ali Jinnah","Liaquat Ali","Zulfikar Ali"], a:"Muhammad Ali Jinnah"},
-      {q:"Pakistan mein kitni provinces hain?", o:["3","4","5","6"], a:"4"}
+      {q:"Pakistan mein kitni provinces hain?", o:["3","4","5","6"], a:"4"},
+      {q:"Pakistan ka sabse bara sheher kaun sa hai?", o:["Lahore","Karachi","Islamabad","Faisalabad"], a:"Karachi"},
+      {q:"Quaid-e-Azam ka youm-e-wiladat kab hai?", o:["25 December","14 August","23 March","6 September"], a:"25 December"},
+      {q:"Pakistan ka qaumi tarana kisne likha?", o:["Allama Iqbal","Hafeez Jalandhari","Faiz Ahmed Faiz","Josh Malihabadi"], a:"Hafeez Jalandhari"}
     ]
   },
 
@@ -959,26 +999,32 @@ const QUESTIONS = {
       {q:"Dunya ka sabse uncha pahad kaun sa hai?", o:["K2","Nanga Parbat","Mount Everest","Tirich Mir"], a:"Mount Everest"},
       {q:"Internet ki ijad kisne ki?", o:["Bill Gates","Tim Berners-Lee","Steve Jobs","Elon Musk"], a:"Tim Berners-Lee"},
       {q:"Pakistan ka sabse bada darya kaun sa hai?", o:["Ravi","Chenab","Indus (Darya-e-Sindh)","Jhelum"], a:"Indus (Darya-e-Sindh)"},
-      {q:"Dunya mein kitne mazhab hain (bade)?", o:["3","4","5","6"], a:"5"}
+      {q:"Dunya mein kitne mazhab hain (bade)?", o:["3","4","5","6"], a:"5"},
+      {q:"Dunya ki sabse lambi deewar kahan hai?", o:["India","China","Egypt","Mexico"], a:"China"},
+      {q:"Pakistan ke pehle wazeer-e-azam kaun the?", o:["Quaid-e-Azam","Liaquat Ali Khan","Ayub Khan","Zulfikar Ali Bhutto"], a:"Liaquat Ali Khan"}
     ],
     "Science": [
       {q:"Atom ka markaz kya kehlaata hai?", o:["Electron","Proton","Nucleus","Neutron"], a:"Nucleus"},
       {q:"Sound travel karta hai through?", o:["Vacuum","Medium (hawa/pani)","Space","Light"], a:"Medium (hawa/pani)"},
       {q:"Kaunsa vitamin dhoop se milta hai?", o:["Vitamin A","Vitamin B","Vitamin C","Vitamin D"], a:"Vitamin D"},
-      {q:"Insaan ka dil 1 minute mein kitni baar dhakta hai?", o:["50-60","60-100","100-120","40-50"], a:"60-100"}
+      {q:"Insaan ka dil 1 minute mein kitni baar dhakta hai?", o:["50-60","60-100","100-120","40-50"], a:"60-100"},
+      {q:"Paani ka chemical formula kya hai?", o:["CO2","O2","H2O","NaCl"], a:"H2O"},
+      {q:"Insaan ke jism mein kitni haddiyan hoti hain?", o:["196","206","216","226"], a:"206"}
     ]
   }
 };
 
 // ===== STATE & GAME LOGIC =====
-let state = JSON.parse(localStorage.getItem('eduplay_v2')) || { stars: 0, badges: 0, games: 0 };
+let state = JSON.parse(localStorage.getItem('eduplay_v2')) || { stars: 0, badges: 0, games: 0, best: {} };
+if (!state.best) state.best = {}; // backward-compat for older saves
+
 let cur = { idx: 0, score: 0, questions: [], class: '', subject: '' };
 
 function saveState() { localStorage.setItem('eduplay_v2', JSON.stringify(state)); }
 
 function resetProgress() {
   if (confirm('Kya aap sach mein progress reset karna chahte hain?')) {
-    state = { stars: 0, badges: 0, games: 0 };
+    state = { stars: 0, badges: 0, games: 0, best: {} };
     saveState();
     updateHome();
     alert('Progress reset ho gayi! ✅');
@@ -999,6 +1045,7 @@ function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if (id === 'classSelect') buildClasses();
+  if (id === 'subjectSelect' && cur.class && QUESTIONS[cur.class]) buildSubjects();
   if (id === 'home') updateHome();
 }
 
@@ -1027,8 +1074,10 @@ function buildSubjects() {
   Object.keys(QUESTIONS[cur.class]).forEach(s => {
     const btn = document.createElement('button');
     btn.className = 'btn btn-subject';
-    btn.innerHTML = `${subjectEmoji(s)}<br>${s}`;
-    btn.style.height = '65px';
+    const b = state.best[cur.class + '|' + s];
+    const bestLine = b ? `<br><span style="font-size:0.75em;opacity:0.95">🏆 Best: ${b.score}/${b.total}</span>` : '';
+    btn.innerHTML = `${subjectEmoji(s)}<br>${s}${bestLine}`;
+    btn.style.height = b ? '78px' : '65px';
     btn.onclick = () => startQuiz(s);
     grid.appendChild(btn);
   });
@@ -1119,9 +1168,16 @@ function finish() {
   state.stars += cur.score;
   state.games++;
 
+  // Per-subject best score (local leaderboard)
+  const key = cur.class + '|' + cur.subject;
+  const prev = state.best[key] || { score: -1, total: total };
+  const isNewBest = cur.score > prev.score;
+  if (isNewBest) state.best[key] = { score: cur.score, total: total };
+
   let badge = '';
   if (pct === 1) { state.badges++; badge = `🏆 Perfect Score Badge mila!`; }
   else if (pct >= 0.7) badge = `⭐ Acche jawab ke liye Star mila!`;
+  if (isNewBest) badge += (badge ? '<br>' : '') + `🎯 Naya best score: ${cur.score}/${total}!`;
 
   saveState();
 
